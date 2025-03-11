@@ -92,6 +92,42 @@ for nivel in niveles:
     print(f"Valor máximo del tiempo de incidentes: {valor_maximo:.2f} días")
     print("------------------------")
 
+
+# 3.3 Análisis por cliente
+def obtener_datos_fraude_cliente():
+    query = """
+    SELECT te.id_cliente, COUNT(te.id_ticket) AS num_incidentes,
+           COUNT(ce.id_contacto) AS num_actuaciones, SUM(ce.tiempo) AS total_tiempo,
+           AVG(ce.tiempo) AS media_tiempo, MIN(ce.tiempo) AS min_tiempo, 
+           MAX(ce.tiempo) AS max_tiempo
+    FROM contactos_con_empleados ce
+    JOIN tickets_emitidos te ON ce.id_ticket = te.id_ticket
+    WHERE te.tipo_incidencia = 5  -- Solo fraudes
+    GROUP BY te.id_cliente;
+    """
+    df = pd.read_sql_query(query, conn)
+    df['mediana_tiempo'] = df['total_tiempo'].median()
+    df['varianza_tiempo'] = df['total_tiempo'].var()
+    return df
+
+
+# Obtener los datos
+df_fraude_cliente = obtener_datos_fraude_cliente()
+
+# Mostrar resultados por cliente
+print("\n--- Estadísticas por cliente ---\n")
+for index, row in df_fraude_cliente.iterrows():
+    print(f"Cliente ID: {row['id_cliente']}")
+    print(f"Número total de incidentes: {row['num_incidentes']}")
+    print(f"Número total de actuaciones: {row['num_actuaciones']}")
+    print(f"Tiempo total invertido: {row['total_tiempo']:.2f} horas")
+    print(f"Mediana del tiempo por contacto: {row['mediana_tiempo']:.2f} horas")
+    print(f"Media del tiempo por contacto: {row['media_tiempo']:.2f} horas")
+    print(f"Varianza del tiempo por contacto: {row['varianza_tiempo']:.2f}")
+    print(f"Tiempo mínimo en un contacto: {row['min_tiempo']:.2f} horas")
+    print(f"Tiempo máximo en un contacto: {row['max_tiempo']:.2f} horas")
+    print("--------------------------------------------------------")
+
 # 3.4 Análisis por tipo de incidente
 tipo_incidencia_fraude = 'Fraude'
 
