@@ -62,6 +62,26 @@ for tipo in tipos_incidentes:
     # Mostrar gráfico
     plt.show()
 
+#4.3 Obtener los 5 clientes más críticos (más incidentes de mantenimiento y tipo distinto de 1)
+df_clientes_criticos = pd.read_sql_query('''
+    SELECT id_cliente, COUNT(*) as num_incidentes
+    FROM tickets_emitidos
+    WHERE es_mantenimiento = 1 AND tipo_incidencia != 1
+    GROUP BY id_cliente
+    ORDER BY num_incidentes DESC
+    LIMIT 5
+''', conn)
+
+# Graficar los resultados
+df_clientes_criticos.set_index('id_cliente', inplace=True)
+
+df_clientes_criticos.plot(kind='bar', legend=False)
+plt.title('Top 5 Clientes Más Críticos')
+plt.xlabel('ID del Cliente')
+plt.ylabel('Número de Incidentes')
+plt.xticks(rotation=0)
+plt.show()
+
 # 4.4 Mostrar los usuarios representados en un gráfico de barras que muestre el número total de actuaciones realizadas por los empleados
 df_actuaciones_empleados = pd.read_sql_query('''SELECT e.nombre, COUNT(*) as num_actuaciones 
                                                 FROM contactos_con_empleados cce
