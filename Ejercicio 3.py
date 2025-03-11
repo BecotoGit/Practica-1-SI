@@ -6,7 +6,7 @@ import numpy as np
 conn = sqlite3.connect('datos.db')
 
 # 3.1 Por empleado
-def obtener_datos_fraude():
+def fraude_empleados():
     query = """
     SELECT ce.id_empleado, COUNT(te.id_ticket) AS num_incidentes,
            COUNT(ce.id_contacto) AS num_actuaciones, SUM(ce.tiempo) AS total_tiempo,
@@ -23,7 +23,7 @@ def obtener_datos_fraude():
     return df
 
 # Obtener los datos
-df_fraude = obtener_datos_fraude()
+df_fraude = fraude_empleados()
 
 # Mostrar resultados por empleado
 print("\n--- Estadísticas por empleado ---\n")
@@ -139,3 +139,47 @@ print("Varianza: %.2f" % varianza_tiempo_fraude)
 print("Valor mínimo: %.2f días" % min_tiempo_fraude)
 print("Valor máximo: %.2f días" % max_tiempo_fraude)
 print("------------------------")
+
+#3.5 Por Dia de la Semana
+def fraude_dias_semana():
+    query = """
+    SELECT strftime('%w', te.fecha_apertura) AS dia_semana, COUNT(te.id_ticket) AS num_incidentes,
+           COUNT(ce.id_contacto) AS num_actuaciones, SUM(ce.tiempo) AS total_tiempo,
+           AVG(ce.tiempo) AS media_tiempo, MIN(ce.tiempo) AS min_tiempo, 
+           MAX(ce.tiempo) AS max_tiempo
+    FROM contactos_con_empleados ce
+    JOIN tickets_emitidos te ON ce.id_ticket = te.id_ticket
+    WHERE te.tipo_incidencia = 5  -- Solo fraudes
+    GROUP BY dia_semana;
+    """
+    df = pd.read_sql_query(query, conn)
+    df['mediana_tiempo'] = df['total_tiempo'].median()
+    df['varianza_tiempo'] = df['total_tiempo'].var()
+    return df
+
+# Obtener los datos
+df_fraude = fraude_dias_semana()
+
+# Mapeo de días de la semana con todos los días asegurados
+dias_semana = {
+    "1": "Lunes", "2": "Martes", "3": "Miércoles",
+    "4": "Jueves", "5": "Viernes", "6": "Sábado", "0": "Domingo"
+}
+
+df_fraude['dia_semana'] = df_fraude['dia_semana'].map(dias_semana)
+
+df_fraude = df_fraude.set_index('dia_semana').reindex(dias_semana.values(), fill_value=0).reset_index()
+
+# Mostrar resultados por día de la semana
+print("\n--- Estadísticas por día de la semana ---\n")
+for index, row in df_fraude.iterrows():
+    print(f"Día de la semana: {row['dia_semana']}")
+    print(f"Número total de incidentes: {row['num_incidentes']}")
+    print(f"Número total de actuaciones: {row['num_actuaciones']}")
+    print(f"Tiempo total invertido: {row['total_tiempo']:.2f} horas")
+    print(f"Mediana del tiempo por contacto: {row['mediana_tiempo']:.2f} horas")
+    print(f"Media del tiempo por contacto: {row['media_tiempo']:.2f} horas")
+    print(f"Varianza del tiempo por contacto: {row['varianza_tiempo']:.2f}")
+    print(f"Tiempo mínimo en un contacto: {row['min_tiempo']:.2f} horas")
+    print(f"Tiempo máximo en un contacto: {row['max_tiempo']:.2f} horas")
+    print("--------------------------------------------------------")
