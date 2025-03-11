@@ -179,3 +179,4 @@ valor_maximo = df_incidentes_empleados['num_incidentes'].max()
 print("Valor mínimo de incidentes por empleado: %d" % valor_minimo)
 print("Valor máximo de incidentes por empleado: %d" % valor_maximo)
 print("------------------------")
+
