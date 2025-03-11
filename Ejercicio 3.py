@@ -212,7 +212,6 @@ for index, row in df_fraude.iterrows():
     print(f"Día de la semana: {row['dia_semana']}")
     print(f"Número total de incidentes: {row['num_incidentes']}")
     print(f"Número total de actuaciones: {row['num_actuaciones']}")
-    print(f"Tiempo total invertido: {row['total_tiempo']:.2f} horas")
     print(f"Mediana del tiempo por contacto: {row['mediana_tiempo']:.2f} horas")
     print(f"Media del tiempo por contacto: {row['media_tiempo']:.2f} horas")
     print(f"Varianza del tiempo por contacto: {row['varianza_tiempo']:.2f}")
