@@ -99,12 +99,36 @@ print("Datos insertados correctamente en la base de datos.")
 
 conn = sqlite3.connect('datos.db')
 
-# Calcular núemro de muestras
+# Calcular número de muestras
 df_muestras = pd.read_sql_query('''SELECT COUNT(*) FROM tickets_emitidos''', conn)
 n_muestras = df_muestras.values[0][0]
-print("Número de muestras: %d" % n_muestras);
+print("Número de muestras: %d" % n_muestras)
 print("------------------------")
 
-#Calcular la media y desviación estándar del total de incidentes
+# Calcular la media y desviación estándar del número de horas totales realizadas en cada incidente
+df_horas_incidentes = pd.read_sql_query('''
+    SELECT id_ticket, SUM(tiempo) as total_horas
+    FROM contactos_con_empleados
+    GROUP BY id_ticket
+''', conn)
 
+media_horas = df_horas_incidentes['total_horas'].mean()
+desviacion_horas = df_horas_incidentes['total_horas'].std()
 
+print("Media de horas por incidente: %.2f" % media_horas)
+print("Desviación estándar de horas por incidente: %.2f" % desviacion_horas)
+print("------------------------")
+
+# Calcular el valor mínimo y máximo del tiempo entre apertura y cierre de incidente
+df_tiempo_incidentes = pd.read_sql_query('''
+    SELECT id_ticket, 
+           julianday(fecha_cierre) - julianday(fecha_apertura) as tiempo_incidente
+    FROM tickets_emitidos
+''', conn)
+
+min_tiempo = df_tiempo_incidentes['tiempo_incidente'].min()
+max_tiempo = df_tiempo_incidentes['tiempo_incidente'].max()
+
+print("Tiempo mínimo entre apertura y cierre de incidente: %.2f días" % min_tiempo)
+print("Tiempo máximo entre apertura y cierre de incidente: %.2f días" % max_tiempo)
+print("------------------------")
