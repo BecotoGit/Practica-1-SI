@@ -2,11 +2,12 @@ import sqlite3
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 # Conectar a la base de datos
 conn = sqlite3.connect('datos.db')
 
-# Calcular la media de tiempo (apertura-cierre) de los incidentes agrupando entre los que son de mantenimiento y los que no
+#4.1 Calcular la media de tiempo (apertura-cierre) de los incidentes agrupando entre los que son de mantenimiento y los que no
 df_tiempo_mantenimiento = pd.read_sql_query('''
     SELECT es_mantenimiento, 
            AVG(julianday(fecha_cierre) - julianday(fecha_apertura)) as tiempo_promedio
@@ -24,3 +25,39 @@ plt.xlabel('Tipo de Incidente')
 plt.ylabel('Tiempo Promedio (días)')
 plt.xticks(rotation=0)
 plt.show()
+
+#4.2 Mostrar de incidente una gráfica de “bigotes”.
+def obtener_tiempos_resolucion():
+    query = """
+    SELECT te.tipo_incidencia, 
+           julianday(te.fecha_cierre) - julianday(te.fecha_apertura) AS tiempo_resolucion
+    FROM tickets_emitidos te
+    WHERE te.fecha_cierre IS NOT NULL;
+    """
+    df = pd.read_sql_query(query, conn)
+    return df
+
+
+# Obtener los datos
+df_resolucion = obtener_tiempos_resolucion()
+
+
+tipos_incidentes = df_resolucion['tipo_incidencia'].unique()
+
+for tipo in tipos_incidentes:
+    df_filtrado = df_resolucion[df_resolucion['tipo_incidencia'] == tipo]
+
+    plt.figure(figsize=(8, 5))
+    sns.boxplot(y=df_filtrado['tiempo_resolucion'], showfliers=False)
+
+    percentiles = df_filtrado['tiempo_resolucion'].quantile([0.05, 0.90])
+    plt.scatter(0, percentiles[0.05], color='red', label='Percentil 5%')
+    plt.scatter(0, percentiles[0.90], color='green', label='Percentil 90%')
+
+    plt.ylabel("Tiempo de Resolución (días)")
+    plt.title(f"Distribución del Tiempo de Resolución - Tipo {tipo}")
+    plt.legend()
+    plt.grid()
+
+    # Mostrar gráfico
+    plt.show()
