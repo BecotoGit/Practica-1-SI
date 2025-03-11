@@ -115,6 +115,19 @@ print("Media de valoraciones >= 5: %.2f" % media_valoraciones)
 print("Desviación estándar de valoraciones >= 5: %.2f" % desviacion_valoraciones)
 print("------------------------")
 
+#2.3 Calcular la media y desviación estándar del número de horas totales realizadas en cada incidente
+df_horas_incidentes = pd.read_sql_query('''
+    SELECT id_ticket, SUM(tiempo) as total_horas
+    FROM contactos_con_empleados
+    GROUP BY id_ticket
+''', conn)
+media_horas = df_horas_incidentes['total_horas'].mean()
+desviacion_horas = df_horas_incidentes['total_horas'].std()
+
+print("Media de horas por incidente: %.2f" % media_horas)
+print("Desviación estándar de horas por incidente: %.2f" % desviacion_horas)
+print("------------------------")
+
 #2.4 Calcular la media y desviación estándar del número de horas totales realizadas en cada incidente
 df_horas_incidentes = pd.read_sql_query('''
     SELECT id_ticket, SUM(tiempo) as total_horas
@@ -127,6 +140,19 @@ desviacion_horas = df_horas_incidentes['total_horas'].std()
 print("Media de horas por incidente: %.2f" % media_horas)
 print("Desviación estándar de horas por incidente: %.2f" % desviacion_horas)
 print("------------------------")
+
+#2.5 Calcular el valor mínimo y máximo del total de horas realizadas por los empleados
+df_horas_empleados = pd.read_sql_query('''SELECT id_empleado, SUM(tiempo) as total_horas 
+                                          FROM contactos_con_empleados 
+                                          GROUP BY id_empleado''', conn)
+
+min_horas = df_horas_empleados['total_horas'].min()
+max_horas = df_horas_empleados['total_horas'].max()
+
+print("Valor mínimo de horas realizadas por empleado: %.2f" % min_horas)
+print("Valor máximo de horas realizadas por empleado: %.2f" % max_horas)
+print("------------------------")
+
 
 #2.6 Calcular el valor mínimo y máximo del tiempo entre apertura y cierre de incidente
 df_tiempo_incidentes = pd.read_sql_query('''
