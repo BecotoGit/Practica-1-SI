@@ -61,3 +61,18 @@ for tipo in tipos_incidentes:
 
     # Mostrar gráfico
     plt.show()
+
+# 4.4 Mostrar los usuarios representados en un gráfico de barras que muestre el número total de actuaciones realizadas por los empleados
+df_actuaciones_empleados = pd.read_sql_query('''SELECT e.nombre, COUNT(*) as num_actuaciones 
+                                                FROM contactos_con_empleados cce
+                                                JOIN empleados e ON cce.id_empleado = e.id_emp
+                                                GROUP BY e.nombre''', conn)
+
+plt.figure(figsize=(10, 6))
+plt.bar(df_actuaciones_empleados['nombre'], df_actuaciones_empleados['num_actuaciones'], color='skyblue')
+plt.xlabel('Empleados')
+plt.ylabel('Número de Actuaciones')
+plt.title('Número Total de Actuaciones Realizadas por los Empleados')
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
