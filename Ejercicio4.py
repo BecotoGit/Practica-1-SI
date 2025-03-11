@@ -1,8 +1,6 @@
 import sqlite3
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
-import seaborn as sns
 
 # Conectar a la base de datos
 conn = sqlite3.connect('datos.db')
@@ -37,10 +35,8 @@ def obtener_tiempos_resolucion():
     df = pd.read_sql_query(query, conn)
     return df
 
-
 # Obtener los datos
 df_resolucion = obtener_tiempos_resolucion()
-
 
 tipos_incidentes = df_resolucion['tipo_incidencia'].unique()
 
@@ -48,11 +44,11 @@ for tipo in tipos_incidentes:
     df_filtrado = df_resolucion[df_resolucion['tipo_incidencia'] == tipo]
 
     plt.figure(figsize=(8, 5))
-    sns.boxplot(y=df_filtrado['tiempo_resolucion'], showfliers=False)
+    plt.boxplot(df_filtrado['tiempo_resolucion'], vert=True, patch_artist=True, showfliers=False)
 
     percentiles = df_filtrado['tiempo_resolucion'].quantile([0.05, 0.90])
-    plt.scatter(0, percentiles[0.05], color='red', label='Percentil 5%')
-    plt.scatter(0, percentiles[0.90], color='green', label='Percentil 90%')
+    plt.scatter(1, percentiles[0.05], color='red', label='Percentil 5%')
+    plt.scatter(1, percentiles[0.90], color='green', label='Percentil 90%')
 
     plt.ylabel("Tiempo de Resolución (días)")
     plt.title(f"Distribución del Tiempo de Resolución - Tipo {tipo}")
