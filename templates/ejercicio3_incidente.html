@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis de Incidentes</title>
+</head>
+<body>
+
+    <h1>Análisis de Incidentes</h1>
+    <table border="1">
+            <tr>
+                <th>Tipo de Incidente</th>
+                <th>Número de Incidentes</th>
+                <th>Mediana (días)</th>
+                <th>Media (días)</th>
+                <th>Varianza</th>
+                <th>Mínimo (días)</th>
+                <th>Máximo (días)</th>
+            </tr>
+            {% for tipo, datos in datos_incidentes.items() %}
+            <tr>
+                <td>{{ tipo }}</td>
+                <td>{{ datos.num_incidentes }}</td>
+                <td>{{ datos.mediana_tiempo if datos.mediana_tiempo is not none else 'N/A' }}</td>
+                <td>{{ datos.media_tiempo if datos.media_tiempo is not none else 'N/A' }}</td>
+                <td>{{ datos.varianza_tiempo if datos.varianza_tiempo is not none else 'N/A' }}</td>
+                <td>{{ datos.min_tiempo if datos.min_tiempo is not none else 'N/A' }}</td>
+                <td>{{ datos.max_tiempo if datos.max_tiempo is not none else 'N/A' }}</td>
+            </tr>
+            {% endfor %}
+    </table>
+
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Fraude por Nivel de Empleado</title>
+</head>
+<body>
+    <h1>Estadísticas de Fraude por Nivel de Empleado</h1>
+
+    {% for nivel, datos in datos_niveles.items() %}
+        <h2>Estadísticas para Nivel {{ nivel }}</h2>
+
+        {% if datos.num_incidentes > 0 %}
+            <table border="1">
+                <tr>
+                    <th>Incidentes</th>
+                    <th>Actuaciones</th>
+                    <th>Mediana</th>
+                    <th>Media</th>
+                    <th>Varianza</th>
+                    <th>Mínimo</th>
+                    <th>Máximo</th>
+                </tr>
+                <tr>
+                    <td>{{ datos.num_incidentes }}</td>
+                    <td>{{ datos.num_actuaciones }}</td>
+                    <td>{{ datos.mediana }}</td>
+                    <td>{{ datos.media }}</td>
+                    <td>{{ datos.varianza }}</td>
+                    <td>{{ datos.valor_minimo }}</td>
+                    <td>{{ datos.valor_maximo }}</td>
+                </tr>
+            </table>
+        {% else %}
+            <p>No hay datos disponibles para el nivel {{ nivel }}.</p>
+        {% endif %}
+    {% endfor %}
+</body>
+</html>
