@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Análisis de Fraude por Empleado</title>
+</head>
+<body>
+    <h1>Estadísticas de fraude por empleado</h1>
+    <table border="1">
+        <tr>
+            <th>ID Empleado</th>
+            <th>Número de incidentes</th>
+            <th>Número de actuaciones</th>
+            <th>Tiempo total</th>
+            <th>Media del tiempo</th>
+            <th>Mediana del tiempo</th>
+            <th>Varianza del tiempo</th>
+            <th>Tiempo mínimo</th>
+            <th>Tiempo máximo</th>
+        </tr>
+        {% for emp in empleados %}
+        <tr>
+            <td>{{ emp.id_empleado }}</td>
+            <td>{{ emp.num_incidentes }}</td>
+            <td>{{ emp.num_actuaciones }}</td>
+            <td>{{ emp.total_tiempo }}</td>
+            <td>{{ emp.media_tiempo }}</td>
+            <td>{{ emp.mediana_tiempo }}</td>
+            <td>{{ emp.varianza_tiempo }}</td>
+            <td>{{ emp.min_tiempo }}</td>
+            <td>{{ emp.max_tiempo }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
