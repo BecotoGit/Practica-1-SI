@@ -11,7 +11,7 @@ app = Flask(__name__)
 @app.route('/ejercicio2')
 def ejercicio2():
     conn = sqlite3.connect('datos.db')
-    num_muestras = Ejercicio2.calcular_numero_muestras(conn) # Replace with the actual function call from Ejercicio2
+    num_muestras = Ejercicio2.calcular_numero_muestras(conn)
     media_valoraciones, desviacion_valoraciones = Ejercicio2.calcular_media_desviacion_valoraciones(conn)
     media_incidentes, desviacion_incidentes = Ejercicio2.calcular_media_desviacion_incidentes_cliente(conn)
     media_horas, desviacion_horas = Ejercicio2.calcular_media_desviacion_horas_incidentes(conn)
@@ -44,7 +44,7 @@ def ejercicio3_empleado():
 
 @app.route('/ejercicio3/nivel')
 def ejercicio3_nivel():
-    niveles = [1, 2, 3]  # Niveles de empleado a analizar
+    niveles = [1, 2, 3]
     datos_niveles = {}
 
     with sqlite3.connect('datos.db') as conn:
@@ -63,7 +63,7 @@ def ejercicio3_cliente():
 
 @app.route('/ejercicio3/incidente')
 def ejercicio3_incidente():
-    tipos_incidentes = ['Fraude']  # Lista de tipos de incidentes (puedes agregar más si es necesario)
+    tipos_incidentes = ['Fraude']
     datos_incidentes = {}
 
     with sqlite3.connect('datos.db') as conn:

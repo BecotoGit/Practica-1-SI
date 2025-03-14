@@ -81,7 +81,6 @@ with open('datos.json') as j:
                   (ticket["cliente"], ticket["fecha_apertura"], ticket["fecha_cierre"], ticket["es_mantenimiento"],
                    ticket["satisfaccion_cliente"], ticket["tipo_incidencia"]))
 
-        # Obtener el ID del ticket recién insertado
         id_ticket = c.lastrowid
 
         # Insertar contactos con empleados
@@ -89,13 +88,11 @@ with open('datos.json') as j:
             c.execute("INSERT INTO contactos_con_empleados (id_ticket, id_empleado, fecha, tiempo) VALUES (?, ?, ?, ?)",
                       (id_ticket, contacto["id_emp"], contacto["fecha"], contacto["tiempo"]))
 
-# Confirmar los cambios
 conn.commit()
 
 # Cerrar la conexión
 conn.close()
 
-print("Datos insertados correctamente en la base de datos.")
 
 conn = sqlite3.connect('datos.db')
 

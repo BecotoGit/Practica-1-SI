@@ -92,7 +92,6 @@ def obtener_datos_fraude_cliente(conn):
 def obtener_datos_tipo_incidencia(conn):
     tipo_incidencia_fraude = 'Fraude'
 
-    # Número total de incidentes
     df_num_incidentes = pd.read_sql_query('''
         SELECT COUNT(*) as num_incidentes
         FROM tickets_emitidos
@@ -101,7 +100,6 @@ def obtener_datos_tipo_incidencia(conn):
     ''', conn, params=(tipo_incidencia_fraude,))
     num_incidentes = df_num_incidentes['num_incidentes'].values[0]
 
-    # Cálculo de tiempos de resolución
     df_tiempo = pd.read_sql_query('''
         SELECT julianday(fecha_cierre) - julianday(fecha_apertura) as tiempo_resolucion
         FROM tickets_emitidos
@@ -109,7 +107,6 @@ def obtener_datos_tipo_incidencia(conn):
         WHERE tipos_incidentes.nombre = ?
     ''', conn, params=(tipo_incidencia_fraude,))
 
-    # Manejo de datos vacíos
     if df_tiempo.empty:
         return {
             'num_incidentes': num_incidentes,
@@ -146,10 +143,8 @@ def obtener_datos_fraude_dias_semana(conn):
 
     df = pd.read_sql_query(query, conn)
 
-    # Convertir la columna a string para mapear correctamente
     df["dia_semana"] = df["dia_semana"].astype(str)
 
-    # Mapeo de los días de la semana
     dias_semana = {
         "0": "Domingo", "1": "Lunes", "2": "Martes",
         "3": "Miércoles", "4": "Jueves", "5": "Viernes", "6": "Sábado"
