@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Visualización de Modelos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Visualización de los Modelos de Clasificación</h1>
+        <div class="row g-4">
+            <!-- Regresión Logística -->
+            <div class="col-md-4">
+                <div class="card shadow-sm">
+                    <img src="{{ url_for('static', filename='graficas/regresion_logistica.png') }}" class="card-img-top" alt="Regresión Logística">
+                    <div class="card-body">
+                        <h5 class="card-title">Regresión Logística</h5>
+                        <p class="card-text">Relación entre la duración del ticket y la probabilidad de que sea crítico.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Árbol de Decisión -->
+            <div class="col-md-4">
+                <div class="card shadow-sm">
+                    <img src="{{ url_for('static', filename='graficas/arbol_decision.png') }}" class="card-img-top" alt="Árbol de Decisión">
+                    <div class="card-body">
+                        <h5 class="card-title">Árbol de Decisión</h5>
+                        <p class="card-text">Representación visual del árbol de decisión generado para clasificar los tickets.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Random Forest -->
+            <div class="col-md-4">
+                <div class="card shadow-sm">
+                    <img src="{{ url_for('static', filename='graficas/importancia_random_forest.png') }}" class="card-img-top" alt="Random Forest">
+                    <div class="card-body">
+                        <h5 class="card-title">Random Forest</h5>
+                        <p class="card-text">Importancia de las variables en el modelo de Random Forest.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-5">
+            <a href="/" class="btn btn-primary">Volver al formulario</a>
+        </div>
+    </div>
+</body>
+</html>

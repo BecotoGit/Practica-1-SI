@@ -83,6 +83,10 @@ def clasificarEj5():
     resultado = modelo.predict(datos)[0]
     return render_template("resultado.html", resultado=resultado)
 
+@app.route('/graficas')
+def mostrar_graficas():
+    return render_template("graficas.html")
+
 
 @app.route('/')
 def index():
