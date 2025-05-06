@@ -4,7 +4,7 @@ import sqlite3
 from flask import Flask, render_template, request
 from datetime import datetime
 import numpy as np
-import joblib
+
 
 import Ejercicio2
 import Ejercicio3
