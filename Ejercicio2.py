@@ -96,74 +96,34 @@ conn.close()
 
 conn = sqlite3.connect('../datos.db')
 
-#2.1 Calcular número de muestras
-def calcular_numero_muestras(conn):
-    df_muestras = pd.read_sql_query('''SELECT COUNT(*) FROM tickets_emitidos''', conn)
-    n_muestras = df_muestras.values[0][0]
-    return n_muestras
 
-#2.2 Calcular la media y desviación estándar del total de incidentes con valoracion >= 5
-def calcular_media_desviacion_valoraciones(conn):
-    df_valoraciones = pd.read_sql_query('''SELECT satisfaccion_cliente FROM tickets_emitidos WHERE satisfaccion_cliente >= 5''', conn)
-    media_valoraciones = df_valoraciones['satisfaccion_cliente'].astype(float).mean()
-    desviacion_valoraciones = df_valoraciones['satisfaccion_cliente'].astype(float).std()
-    return media_valoraciones, desviacion_valoraciones
-
-
-#2.3 Calcular la media y desviación estándar del total del número de incidentes por cliente
-def calcular_media_desviacion_incidentes_cliente(conn):
-    df_incidentes_cliente = pd.read_sql_query('''
-        SELECT id_cliente, COUNT(*) as total_incidentes
-        FROM tickets_emitidos
-        GROUP BY id_cliente
-        ''', conn)
-    media_incidentes = df_incidentes_cliente['total_incidentes'].mean()
-    desviacion_incidentes = df_incidentes_cliente['total_incidentes'].std()
-    return media_incidentes, desviacion_incidentes
+def top_clientes_incidentes(x):
+    conn = sqlite3.connect('datos.db')
+    query = f"""
+    SELECT c.nombre AS cliente, COUNT(t.id_ticket) AS total_incidentes
+    FROM tickets_emitidos t
+    JOIN clientes c ON t.id_cliente = c.id_cli
+    GROUP BY c.id_cli
+    ORDER BY total_incidentes DESC
+    LIMIT {x}
+    """
+    df = pd.read_sql_query(query, conn)
+    conn.close()
+    return df
 
 
-#2.4 Calcular la media y desviación estándar del número de horas totales realizadas en cada incidente
-def calcular_media_desviacion_horas_incidentes(conn):
-    df_horas_incidentes = pd.read_sql_query('''
-        SELECT id_ticket, SUM(tiempo) as total_horas
-        FROM contactos_con_empleados
-        GROUP BY id_ticket
-    ''', conn)
-    media_horas = df_horas_incidentes['total_horas'].mean()
-    desviacion_horas = df_horas_incidentes['total_horas'].std()
-    return media_horas, desviacion_horas
-
-
-
-#2.5 Calcular el valor mínimo y máximo del total de horas realizadas por los empleados
-def calcular_min_max_horas_empleados(conn):
-    df_horas_empleados = pd.read_sql_query('''SELECT id_empleado, SUM(tiempo) as total_horas 
-                                              FROM contactos_con_empleados 
-                                              GROUP BY id_empleado''', conn)
-    min_horas = df_horas_empleados['total_horas'].min()
-    max_horas = df_horas_empleados['total_horas'].max()
-    return min_horas, max_horas
-
-#2.6 Calcular el valor mínimo y máximo del tiempo entre apertura y cierre de incidente
-def calcular_min_max_tiempo_incidentes(conn):
-    df_tiempo_incidentes = pd.read_sql_query('''
-        SELECT id_ticket, 
-               julianday(fecha_cierre) - julianday(fecha_apertura) as tiempo_incidente
-        FROM tickets_emitidos
-    ''', conn)
-    min_tiempo = df_tiempo_incidentes['tiempo_incidente'].min()
-    max_tiempo = df_tiempo_incidentes['tiempo_incidente'].max()
-    return min_tiempo, max_tiempo
-
-#2.7 Calcular Valor minimo y maximo del numero de incidentes x empleado
-def calcular_min_max_incidentes_empleados(conn):
-    df_incidentes_empleados = pd.read_sql_query('''SELECT id_empleado, COUNT(*) as num_incidentes 
-                                                   FROM contactos_con_empleados 
-                                                   GROUP BY id_empleado''', conn)
-    valor_minimo = df_incidentes_empleados['num_incidentes'].min()
-    valor_maximo = df_incidentes_empleados['num_incidentes'].max()
-    return valor_minimo, valor_maximo
-
-
+def empleados_mas_tiempo(x):
+    conn = sqlite3.connect('datos.db')
+    query = f"""
+    SELECT e.nombre AS empleado, SUM(cce.tiempo) AS tiempo_total
+    FROM contactos_con_empleados cce
+    JOIN empleados e ON cce.id_empleado = e.id_emp
+    GROUP BY e.id_emp
+    ORDER BY tiempo_total DESC
+    LIMIT {x}
+    """
+    df = pd.read_sql_query(query, conn)
+    conn.close()
+    return df
 
 
