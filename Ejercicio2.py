@@ -58,7 +58,7 @@ c.execute('''CREATE TABLE IF NOT EXISTS tipos_incidentes (
             )''')
 
 # Cargar datos desde el archivo JSON
-with open('datos.json') as j:
+with open('data_clasified.json') as j:
     data = json.load(j)
 
     # Insertar datos en la tabla de empleados
