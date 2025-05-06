@@ -1,5 +1,5 @@
 import sqlite3
-import request
+
 
 from flask import Flask, render_template, request
 
@@ -26,8 +26,12 @@ def ejercicio2():
 
 @app.route('/ejercicio3')
 def ejercicio3():
-    datos = Ejercicio3.obtener_ultimas_vulnerabilidades()
-    return render_template("ejercicio3.html", columnas=datos.columns, filas=datos.values.tolist())
+    resultado = Ejercicio3.obtener_ultimas_cves()
+
+    if isinstance(resultado, dict) and "error" in resultado:
+        return render_template("ejercicio3.html", error=resultado["error"])
+    else:
+        return render_template("ejercicio3.html", vulnerabilidades=resultado)
 
 
 

@@ -1,23 +1,28 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Últimas Vulnerabilidades CVE</title>
+    <meta charset="UTF-8">
+    <title>Últimas 10 Vulnerabilidades CVE</title>
 </head>
 <body>
     <h1>Últimas 10 Vulnerabilidades CVE</h1>
-    <table border="1">
-        <tr>
-            {% for col in columnas %}
-            <th>{{ col }}</th>
+    {% if error %}
+        <p><strong>Error:</strong> {{ error }}</p>
+    {% else %}
+        <table border="1">
+            <tr>
+                <th>ID</th>
+                <th>Resumen</th>
+                <th>Fecha</th>
+            </tr>
+            {% for vul in vulnerabilidades %}
+            <tr>
+                <td>{{ vul.ID }}</td>
+                <td>{{ vul.Resumen }}</td>
+                <td>{{ vul.Fecha }}</td>
+            </tr>
             {% endfor %}
-        </tr>
-        {% for fila in filas %}
-        <tr>
-            {% for celda in fila %}
-            <td>{{ celda }}</td>
-            {% endfor %}
-        </tr>
-        {% endfor %}
-    </table>
+        </table>
+    {% endif %}
 </body>
 </html>

@@ -1,25 +1,33 @@
-# Ejercicio3.py
 import requests
-import pandas as pd
 
-def obtener_ultimas_vulnerabilidades():
+def obtener_ultimas_cves(n=10):
+    url = "https://cve.circl.lu/api/last"
     try:
-        url = "https://www.cvesearch.org/api/latest/10"
-        response = requests.get(url)
-
-        if response.status_code != 200:
-            return pd.DataFrame([{"Error": "No se pudo obtener la información"}])
-
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()
         data = response.json()
+
         lista = []
-
         for item in data:
-            lista.append({
-                "ID": item.get("id", "N/A"),
-                "Resumen": item.get("summary", "N/A"),
-                "Fecha": item.get("Published", "N/A")
-            })
+            documento = item.get("document", {})
+            tracking = documento.get("tracking", {})
+            notes = documento.get("notes", [])
 
-        return pd.DataFrame(lista)
-    except Exception as e:
-        return pd.DataFrame([{"Error": str(e)}])
+            cve_id = tracking.get("id")
+            fecha = tracking.get("current_release_date")
+            resumen = next((n["text"] for n in notes if n["category"] == "summary"), None)
+
+            if cve_id and resumen and fecha:
+                lista.append({
+                    "ID": cve_id,
+                    "Resumen": resumen.replace("\n", " "),
+                    "Fecha": fecha.split("T")[0]
+                })
+
+            if len(lista) >= n:
+                break
+
+        return lista
+
+    except requests.RequestException as e:
+        return {"error": str(e)}
