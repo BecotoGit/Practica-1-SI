@@ -4,7 +4,7 @@ import hashlib
 import pandas as pd
 
 # Crear conexión a la base de datos
-conn = sqlite3.connect('datos.db')
+conn = sqlite3.connect('../datos.db')
 c = conn.cursor()
 
 # Borrar las tablas si ya existen
@@ -95,7 +95,7 @@ conn.commit()
 conn.close()
 
 
-conn = sqlite3.connect('datos.db')
+conn = sqlite3.connect('../datos.db')
 
 #2.1 Calcular número de muestras
 def calcular_numero_muestras(conn):

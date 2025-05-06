@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 
 # Conectar a la base de datos
-conn = sqlite3.connect('datos.db')
+conn = sqlite3.connect('../datos.db')
 
 
 # 3.1 Análisis por empleado
