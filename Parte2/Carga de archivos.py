@@ -77,9 +77,9 @@ with open('../datos.json') as j:
 
     # Insertar datos en la tabla de tickets emitidos
     for ticket in data["tickets_emitidos"]:
-        c.execute("INSERT INTO tickets_emitidos (id_cliente, fecha_apertura, fecha_cierre, es_mantenimiento, satisfaccion_cliente, tipo_incidencia) VALUES(?, ?, ?, ?, ?)",
+        c.execute("INSERT INTO tickets_emitidos (id_cliente, fecha_apertura, fecha_cierre, es_mantenimiento, satisfaccion_cliente, tipo_incidencia) VALUES(?, ?, ?, ?, ?, ?)",
                   (ticket["cliente"], ticket["fecha_apertura"], ticket["fecha_cierre"], ticket["es_mantenimiento"],
-                   ticket["satisfaccion_cliente"], ticket["tipo_incidencia"]))
+                   ticket["satisfaccion_cliente"], ticket["tipo_incidencia"], ticket["es_critico"]))
 
         id_ticket = c.lastrowid
 

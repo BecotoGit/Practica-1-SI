@@ -1,9 +1,9 @@
 import sqlite3
 
 from flask import Flask, render_template
+
 import Ejercicio2
-import Ejercicio3
-import Ejercicio4
+
 
 
 

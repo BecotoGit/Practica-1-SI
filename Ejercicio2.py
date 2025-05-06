@@ -4,7 +4,7 @@ import hashlib
 import pandas as pd
 
 # Crear conexión a la base de datos
-conn = sqlite3.connect('../datos.db')
+conn = sqlite3.connect('datos.db')
 c = conn.cursor()
 
 # Borrar las tablas si ya existen
@@ -57,7 +57,7 @@ c.execute('''CREATE TABLE IF NOT EXISTS tipos_incidentes (
             )''')
 
 # Cargar datos desde el archivo JSON
-with open('../datos.json') as j:
+with open('datos.json') as j:
     data = json.load(j)
 
     # Insertar datos en la tabla de empleados
@@ -77,7 +77,7 @@ with open('../datos.json') as j:
 
     # Insertar datos en la tabla de tickets emitidos
     for ticket in data["tickets_emitidos"]:
-        c.execute("INSERT INTO tickets_emitidos (id_cliente, fecha_apertura, fecha_cierre, es_mantenimiento, satisfaccion_cliente, tipo_incidencia) VALUES(?, ?, ?, ?, ?)",
+        c.execute("INSERT INTO tickets_emitidos (id_cliente, fecha_apertura, fecha_cierre, es_mantenimiento, satisfaccion_cliente, tipo_incidencia) VALUES(?, ?, ?, ?, ?, ?)",
                   (ticket["cliente"], ticket["fecha_apertura"], ticket["fecha_cierre"], ticket["es_mantenimiento"],
                    ticket["satisfaccion_cliente"], ticket["tipo_incidencia"]))
 
