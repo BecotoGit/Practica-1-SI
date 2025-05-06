@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicio 1 - Incidencias</title>
+</head>
+<body>
+    <h1>Top Clientes con Más Incidencias</h1>
+    <table border="1">
+        <tr>
+            <th>ID Cliente</th>
+            <th>Nombre</th>
+            <th>Nº Incidencias</th>
+        </tr>
+        {% for cli in clientes %}
+        <tr>
+            <td>{{ cli.id_cli }}</td>
+            <td>{{ cli.nombre }}</td>
+            <td>{{ cli.num_incidencias }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h1>Top Tipos de Incidencias por Tiempo Total de Resolución</h1>
+    <table border="1">
+        <tr>
+            <th>ID Incidencia</th>
+            <th>Nombre</th>
+            <th>Tiempo Promedio</th>
+            <th>Tiempo Total</th>
+        </tr>
+        {% for inc in incidencias %}
+        <tr>
+            <td>{{ inc.id_inci }}</td>
+            <td>{{ inc.nombre }}</td>
+            <td>{{ "%.2f"|format(inc.tiempo_promedio) }}</td>
+            <td>{{ "%.2f"|format(inc.tiempo_total) }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
