@@ -2,6 +2,9 @@ import sqlite3
 
 
 from flask import Flask, render_template, request
+from datetime import datetime
+import numpy as np
+import joblib
 
 import Ejercicio2
 import Ejercicio3
@@ -50,6 +53,35 @@ def ejercicio1():
     incidencias = incidencias_df.to_dict(orient='records')
 
     return render_template("ejercicio1.html", clientes=clientes, incidencias=incidencias)
+
+
+
+@app.route('/ejercicio5')
+def formularioEj5():
+    return render_template("clasificar.html")
+
+@app.route('/clasificar', methods=['POST'])
+def clasificarEj5():
+    cliente = int(request.form['cliente'])
+    mantenimiento = int(request.form['mantenimiento'])
+    tipo = int(request.form['tipo'])
+    metodo = request.form['metodo']
+
+    fecha_apertura = datetime.strptime(request.form['fecha_apertura'], "%Y-%m-%d")
+    fecha_cierre = datetime.strptime(request.form['fecha_cierre'], "%Y-%m-%d")
+    duracion = (fecha_cierre - fecha_apertura).days
+
+    datos = np.array([[cliente, mantenimiento, tipo, duracion]])
+
+    if metodo == 'logistico':
+        modelo = joblib.load("modelo_logistico.pkl")
+    elif metodo == 'arbol':
+        modelo = joblib.load("modelo_arbol.pkl")
+    else:
+        modelo = joblib.load("modelo_rf.pkl")
+
+    resultado = modelo.predict(datos)[0]
+    return render_template("resultado.html", resultado=resultado)
 
 
 @app.route('/')

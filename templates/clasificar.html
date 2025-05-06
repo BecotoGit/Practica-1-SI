@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Clasificar Ticket</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <h2 class="mb-4">Clasificar Ticket</h2>
+        <form action="/clasificar" method="post" class="card p-4 shadow-sm">
+            <div class="mb-3">
+                <label for="cliente" class="form-label">Cliente</label>
+                <input type="number" class="form-control" id="cliente" name="cliente" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="fecha_apertura" class="form-label">Fecha de Apertura</label>
+                <input type="date" class="form-control" id="fecha_apertura" name="fecha_apertura" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="fecha_cierre" class="form-label">Fecha de Cierre</label>
+                <input type="date" class="form-control" id="fecha_cierre" name="fecha_cierre" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="mantenimiento" class="form-label">¿Es Mantenimiento?</label>
+                <select class="form-select" id="mantenimiento" name="mantenimiento" required>
+                    <option value="0">No</option>
+                    <option value="1">Sí</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="tipo" class="form-label">Tipo de Incidencia</label>
+                <input type="number" class="form-control" id="tipo" name="tipo" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="metodo" class="form-label">Método de Clasificación</label>
+                <select class="form-select" id="metodo" name="metodo" required>
+                    <option value="logistico">Regresión Logística</option>
+                    <option value="arbol">Árbol de Decisión</option>
+                    <option value="rf">Random Forest</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Clasificar</button>
+        </form>
+    </div>
+</body>
+</html>
+
+

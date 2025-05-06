@@ -2,9 +2,11 @@ import sqlite3
 import json
 import hashlib
 import pandas as pd
+import os
 
 # Crear conexión a la base de datos
-conn = sqlite3.connect('datos.db')
+
+conn = sqlite3.connect("C:/Practica-1-SI/datos.db")
 c = conn.cursor()
 
 # Borrar las tablas si ya existen
@@ -94,7 +96,7 @@ conn.commit()
 conn.close()
 
 
-conn = sqlite3.connect('../datos.db')
+conn = sqlite3.connect("C:/Practica-1-SI/datos.db")
 
 
 def top_clientes_incidentes(x):
