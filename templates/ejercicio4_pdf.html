@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ titulo }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            margin: 30px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 6px;
+            text-align: center;
+        }
+        th {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h2>{{ titulo }}</h2>
+    <p><strong>Región:</strong> {{ region }} | <strong>Cantidad:</strong> {{ cantidad }}</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Capital</th>
+                <th>Región</th>
+                <th>Población</th>
+                <th>Bandera</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pais in paises %}
+                <tr>
+                    <td>{{ pais['nombre'] }}</td>
+                    <td>{{ pais['capital'] }}</td>
+                    <td>{{ pais['region'] }}</td>
+                    <td>{{ pais['poblacion'] }}</td>
+                    <td><img src="{{ pais['bandera'] }}" alt="Bandera" width="50"></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

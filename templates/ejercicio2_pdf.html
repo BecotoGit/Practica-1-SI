@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ titulo }}</title>
+    <style>
+        h2{
+            padding: 8px;
+            background: #79a5d4;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            margin: 30px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 6px;
+            text-align: center;
+        }
+        th {
+            background-color: #ddd;
+        }
+        .index {
+            font-weight: bold;
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <h2>{{ titulo }}</h2>
+    <p><strong>Tipo:</strong> {{ tipo }} | <strong>Cantidad:</strong> {{ cantidad }}</p>
+
+    <table>
+        <thead>
+            <tr>
+                {% for col in columnas %}
+                <th>{{ col }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for fila in filas %}
+            <tr>
+                {% set fila_index = loop.index %}
+                {% for celda in fila %}
+                <td>
+                    {% if loop.index0 == 0 %}
+                        <span class="index">{{ fila_index }}</span>
+                    {% endif %}
+                    {{ celda }}
+                </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

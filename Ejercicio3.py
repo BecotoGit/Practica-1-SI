@@ -1,5 +1,6 @@
 import requests
 
+
 def obtener_ultimas_cves(n=10):
     url = "https://cve.circl.lu/api/last"
     try:
@@ -7,27 +8,40 @@ def obtener_ultimas_cves(n=10):
         response.raise_for_status()
         data = response.json()
 
-        lista = []
-        for item in data:
-            documento = item.get("document", {})
-            tracking = documento.get("tracking", {})
-            notes = documento.get("notes", [])
+        lista_vulnerabilidades = []
 
-            cve_id = tracking.get("id")
-            fecha = tracking.get("current_release_date")
-            resumen = next((n["text"] for n in notes if n["category"] == "summary"), None)
+        for entry in data:
+            cve_id = None
+            resumen = "Sin resumen disponible"
+            fecha_publicacion = "Fecha no disponible"
 
-            if cve_id and resumen and fecha:
-                lista.append({
+            if "aliases" in entry:
+                for alias in entry.get("aliases", []):
+                    if alias.startswith("CVE-"):
+                        cve_id = alias
+                        break
+                resumen = entry.get("summary", resumen)
+                fecha_publicacion = entry.get("published", fecha_publicacion).split("T")[0]
+
+            elif "cveMetadata" in entry:
+                cve_id = entry["cveMetadata"].get("cveId")
+                if "containers" in entry and "cna" in entry["containers"]:
+                    for desc in entry["containers"]["cna"].get("descriptions", []):
+                        resumen = desc.get("value", resumen)
+                        break
+                fecha_publicacion = entry["cveMetadata"].get("datePublished", fecha_publicacion).split("T")[0]
+
+            if cve_id:
+                lista_vulnerabilidades.append({
                     "ID": cve_id,
                     "Resumen": resumen.replace("\n", " "),
-                    "Fecha": fecha.split("T")[0]
+                    "Fecha": fecha_publicacion
                 })
 
-            if len(lista) >= n:
+            if len(lista_vulnerabilidades) >= n:
                 break
 
-        return lista
+        return lista_vulnerabilidades
 
     except requests.RequestException as e:
-        return {"error": str(e)}
+        return {"error": f"No se pudo obtener la lista de CVEs: {str(e)}"}

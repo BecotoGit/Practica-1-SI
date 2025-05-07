@@ -6,7 +6,7 @@ import os
 
 # Crear conexión a la base de datos
 
-conn = sqlite3.connect("C:/Practica-1-SI/datos.db")
+conn = sqlite3.connect("datos.db")
 c = conn.cursor()
 
 # Borrar las tablas si ya existen
@@ -79,9 +79,16 @@ with open('datos.json') as j:
 
     # Insertar datos en la tabla de tickets emitidos
     for ticket in data["tickets_emitidos"]:
-        c.execute("INSERT INTO tickets_emitidos (id_cliente, fecha_apertura, fecha_cierre, es_mantenimiento, satisfaccion_cliente, tipo_incidencia) VALUES(?, ?, ?, ?, ?, ?)",
-                  (ticket["cliente"], ticket["fecha_apertura"], ticket["fecha_cierre"], ticket["es_mantenimiento"],
-                   ticket["satisfaccion_cliente"], ticket["tipo_incidencia"]))
+        fechas_contactos = [contacto["fecha"] for contacto in ticket["contactos_con_empleados"]]
+        if fechas_contactos:
+            nueva_fecha_cierre = max(fechas_contactos)
+        else:
+            nueva_fecha_cierre = ticket["fecha_cierre"]
+
+        c.execute(
+            "INSERT INTO tickets_emitidos (id_cliente, fecha_apertura, fecha_cierre, es_mantenimiento, satisfaccion_cliente, tipo_incidencia) VALUES(?, ?, ?, ?, ?, ?)",
+            (ticket["cliente"], ticket["fecha_apertura"], nueva_fecha_cierre, ticket["es_mantenimiento"],
+             ticket["satisfaccion_cliente"], ticket["tipo_incidencia"]))
 
         id_ticket = c.lastrowid
 
@@ -96,7 +103,7 @@ conn.commit()
 conn.close()
 
 
-conn = sqlite3.connect("C:/Practica-1-SI/datos.db")
+conn = sqlite3.connect("datos.db")
 
 
 def top_clientes_incidentes(x):
@@ -112,6 +119,7 @@ def top_clientes_incidentes(x):
     df = pd.read_sql_query(query, conn)
     conn.close()
     return df
+
 
 
 def empleados_mas_tiempo(x):

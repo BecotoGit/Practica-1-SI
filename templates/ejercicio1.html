@@ -3,40 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <title>Ejercicio 1 - Incidencias</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .data-card {
+            margin-bottom: 2rem;
+        }
+        .table-responsive {
+            overflow-x: auto;
+        }
+    </style>
 </head>
-<body>
-    <h1>Top Clientes con Más Incidencias</h1>
-    <table border="1">
-        <tr>
-            <th>ID Cliente</th>
-            <th>Nombre</th>
-            <th>Nº Incidencias</th>
-        </tr>
-        {% for cli in clientes %}
-        <tr>
-            <td>{{ cli.id_cli }}</td>
-            <td>{{ cli.nombre }}</td>
-            <td>{{ cli.num_incidencias }}</td>
-        </tr>
-        {% endfor %}
-    </table>
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="card shadow-sm data-card">
+            <div class="card-body">
+                <h2 class="mb-4">Top Clientes con Más Incidencias</h2>
+                <form method="GET" action="{{ url_for('ejercicio1') }}" class="row g-3 mb-4">
+                    <input type="hidden" name="section" value="clientes">
+                    <div class="col-md-4">
+                        <label for="X_clientes" class="form-label">Cantidad de resultados:</label>
+                        <input type="number" name="X_clientes" id="X_clientes" class="form-control" min="1" max="20" value="{{ X_clientes or 5 }}">
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">Mostrar</button>
+                    </div>
+                </form>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID Cliente</th>
+                                <th>Nombre</th>
+                                <th>Nº Incidencias</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cli in clientes %}
+                            <tr>
+                                <td>{{ cli.id_cli }}</td>
+                                <td>{{ cli.nombre }}</td>
+                                <td>{{ cli.num_incidencias }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
-    <h1>Top Tipos de Incidencias por Tiempo Total de Resolución</h1>
-    <table border="1">
-        <tr>
-            <th>ID Incidencia</th>
-            <th>Nombre</th>
-            <th>Tiempo Promedio</th>
-            <th>Tiempo Total</th>
-        </tr>
-        {% for inc in incidencias %}
-        <tr>
-            <td>{{ inc.id_inci }}</td>
-            <td>{{ inc.nombre }}</td>
-            <td>{{ "%.2f"|format(inc.tiempo_promedio) }}</td>
-            <td>{{ "%.2f"|format(inc.tiempo_total) }}</td>
-        </tr>
-        {% endfor %}
-    </table>
+        <div class="card shadow-sm data-card">
+            <div class="card-body">
+                <h2 class="mb-4">Top Tipos de Incidencias por Tiempo Total de Resolución</h2>
+                <form method="GET" action="{{ url_for('ejercicio1') }}" class="row g-3 mb-4">
+                    <input type="hidden" name="section" value="incidencias">
+                    <div class="col-md-4">
+                        <label for="X_incidencias" class="form-label">Cantidad de resultados:</label>
+                        <input type="number" name="X_incidencias" id="X_incidencias" class="form-control" min="1" max="20" value="{{ X_incidencias or 5 }}">
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">Mostrar</button>
+                    </div>
+                </form>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID Incidencia</th>
+                                <th>Nombre</th>
+                                <th>Tiempo Promedio</th>
+                                <th>Tiempo Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for inc in incidencias %}
+                            <tr>
+                                <td>{{ inc.id_inci }}</td>
+                                <td>{{ inc.nombre }}</td>
+                                <td>{{ "%.2f"|format(inc.tiempo_promedio) }}</td>
+                                <td>{{ "%.2f"|format(inc.tiempo_total) }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="mt-4 text-center d-flex justify-content-center gap-3">
+            <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i> Volver al Menú Principal
+            </a>
+            <a href="/ejercicio1/pdf" class="btn btn-outline-primary">
+                <i class="fas fa-file-pdf me-1"></i> Descargar PDF
+            </a>
+        </div>
+    </div>
 </body>
 </html>

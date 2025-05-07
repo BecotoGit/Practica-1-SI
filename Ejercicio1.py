@@ -2,7 +2,7 @@ import sqlite3
 import json
 import pandas as pd
 
-def top_clientes_incidencias(conn, x=10):
+def top_clientes_incidencias(conn, x):
     query = '''
     SELECT c.id_cli, c.nombre, COUNT(t.id_ticket) as num_incidencias
     FROM clientes c
@@ -15,7 +15,7 @@ def top_clientes_incidencias(conn, x=10):
     print("Top clientes con más incidencias:\n", df, "\n")
     return df
 
-def top_incidencias_tiempo(conn, x=10):
+def top_incidencias_tiempo(conn, x):
     query = '''
     SELECT ti.id_inci, ti.nombre, 
            AVG(julianday(t.fecha_cierre) - julianday(t.fecha_apertura)) AS tiempo_promedio,

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Últimas 10 Vulnerabilidades CVE</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #dc3545;
+            font-size: 20px;
+            margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background: #c5dada;
+        }
+        th {
+            background-color: #212529;
+            color: white;
+            padding: 8px;
+            text-align: center;
+            font-size: 12px;
+        }
+        td {
+            border: 1px solid #dee2e6;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .cve-link {
+            color: #dc3545;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Últimas 10 Vulnerabilidades CVE</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID CVE</th>
+                <th>Resumen</th>
+                <th>Fecha</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for vul in vulnerabilidades %}
+            <tr>
+                <td>
+                    <a class="cve-link" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name={{ vul.ID }}">
+                        {{ vul.ID }}
+                    </a>
+                </td>
+                <td>{{ vul.Resumen }}</td>
+                <td>{{ vul.Fecha }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+</body>
+</html>

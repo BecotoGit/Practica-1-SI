@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Reporte de Tickets</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 8px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        h1 {
+            text-align: center;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Reporte de Tickets Emitidos</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Cliente</th>
+                <th>Fecha de Apertura</th>
+                <th>Fecha de Cierre</th>
+                <th>Es Mantenimiento</th>
+                <th>Satisfacción del Cliente</th>
+                <th>Tipo de Incidencia</th>
+                <th>Es Crítico</th>
+                <th>Contactos con Empleados</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ticket in tickets %}
+                <tr>
+                    <td>{{ ticket.cliente }}</td>
+                    <td>{{ ticket.fecha_apertura }}</td>
+                    <td>{{ ticket.fecha_cierre }}</td>
+                    <td>{{ 'Sí' if ticket.es_mantenimiento else 'No' }}</td>
+                    <td>{{ ticket.satisfaccion_cliente }}</td>
+                    <td>{{ ticket.tipo_incidencia }}</td>
+                    <td>{{ 'Sí' if ticket.es_critico else 'No' }}</td>
+                    <td>
+                        {% for contacto in ticket.contactos_con_empleados %}
+                            <p>Empleado ID: {{ contacto.id_emp }}, Fecha: {{ contacto.fecha }}, Tiempo: {{ contacto.tiempo }} hrs</p>
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>
