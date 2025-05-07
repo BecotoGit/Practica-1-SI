@@ -1,6 +1,5 @@
 import requests
 
-
 def obtener_ultimas_cves(n=10):
     url = "https://cve.circl.lu/api/last"
     try:
@@ -8,40 +7,35 @@ def obtener_ultimas_cves(n=10):
         response.raise_for_status()
         data = response.json()
 
-        lista_vulnerabilidades = []
+        cves = []
 
         for entry in data:
-            cve_id = None
+            id = None
             resumen = "Sin resumen disponible"
-            fecha_publicacion = "Fecha no disponible"
+            fecha = "Fecha no disponible"
 
             if "aliases" in entry:
-                for alias in entry.get("aliases", []):
-                    if alias.startswith("CVE-"):
-                        cve_id = alias
-                        break
+                id = next((alias for alias in entry.get("aliases", []) if alias.startswith("CVE-")), None)
                 resumen = entry.get("summary", resumen)
-                fecha_publicacion = entry.get("published", fecha_publicacion).split("T")[0]
+                fecha = entry.get("published", fecha)
 
             elif "cveMetadata" in entry:
-                cve_id = entry["cveMetadata"].get("cveId")
-                if "containers" in entry and "cna" in entry["containers"]:
-                    for desc in entry["containers"]["cna"].get("descriptions", []):
-                        resumen = desc.get("value", resumen)
-                        break
-                fecha_publicacion = entry["cveMetadata"].get("datePublished", fecha_publicacion).split("T")[0]
+                id = entry["cveMetadata"].get("cveId")
+                fecha = entry["cveMetadata"].get("datePublished", fecha)
+                descripciones = entry.get("containers", {}).get("cna", {}).get("descriptions", [])
+                resumen = next((d.get("value") for d in descripciones if "value" in d), resumen)
 
-            if cve_id:
-                lista_vulnerabilidades.append({
-                    "ID": cve_id,
+            if id:
+                cves.append({
+                    "ID": id,
                     "Resumen": resumen.replace("\n", " "),
-                    "Fecha": fecha_publicacion
+                    "Fecha": fecha.split("T")[0]
                 })
 
-            if len(lista_vulnerabilidades) >= n:
-                break
+                if len(cves) >= n:
+                    break
 
-        return lista_vulnerabilidades
+        return cves
 
     except requests.RequestException as e:
         return {"error": f"No se pudo obtener la lista de CVEs: {str(e)}"}
