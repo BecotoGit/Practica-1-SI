@@ -42,21 +42,37 @@ def ejercicio1():
     clientes = clientes_df.to_dict(orient='records')
     incidencias = incidencias_df.to_dict(orient='records')
 
-    return render_template("ejercicio1.html", clientes=clientes, incidencias=incidencias, X_clientes=X_clientes, X_incidencias=X_incidencias)
+    return render_template("ejercicio1.html", clientes=clientes, incidencias=incidencias, X_clientes=X_clientes, X_incidencias=X_incidencias, section=section)
 
-@app.route('/ejercicio1/pdf')
+@app.route('/ejercicio1/pdf', methods=['GET'])
 def ejercicio1_pdf():
+    section = request.args.get('section', 'clientes')
+
+    X_clientes = int(request.args.get('X_clientes', 5))
+    X_incidencias = int(request.args.get('X_incidencias', 5))
+
     conn = sqlite3.connect("datos.db")
 
-    clientes_df = Ejercicio1.top_clientes_incidencias(conn, x=5)
-    incidencias_df = Ejercicio1.top_incidencias_tiempo(conn, x=5)
+    if section == 'clientes':
+        clientes_df = Ejercicio1.top_clientes_incidencias(conn, X_clientes)
+        incidencias_df = Ejercicio1.top_incidencias_tiempo(conn, X_incidencias)
+    else:
+        incidencias_df = Ejercicio1.top_incidencias_tiempo(conn, X_incidencias)
+        clientes_df = Ejercicio1.top_clientes_incidencias(conn, X_clientes)
 
     conn.close()
 
-    # Renderizar HTML desde plantilla
-    rendered_html = render_template("ejercicio1.html", clientes=clientes_df.to_dict(orient='records'), incidencias=incidencias_df.to_dict(orient='records'))
+    clientes = clientes_df.to_dict(orient='records')
+    incidencias = incidencias_df.to_dict(orient='records')
 
-    # Convertir HTML a PDF
+    rendered_html = render_template(
+        'ejercicio1_pdf.html',
+        clientes=clientes,
+        incidencias=incidencias,
+        X_clientes=X_clientes,
+        X_incidencias=X_incidencias
+    )
+
     pdf_stream = io.BytesIO()
     pisa_status = pisa.CreatePDF(io.StringIO(rendered_html), dest=pdf_stream)
 
@@ -65,6 +81,8 @@ def ejercicio1_pdf():
 
     pdf_stream.seek(0)
     return send_file(pdf_stream, as_attachment=True, download_name="ejercicio1_datos.pdf", mimetype='application/pdf')
+
+
 
 @app.route('/ejercicio2', methods=['GET'])
 def ejercicio2():
@@ -97,7 +115,7 @@ def ejercicio2_pdf():
 
     rendered_html = render_template(
         'ejercicio2_pdf.html',
-        titulo="Análisis de Datos de Incidentes",
+        titulo="Análisis de ejercicio 2",
         columnas=df.columns,
         filas=df.values,
         tipo=tipo,

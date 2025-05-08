@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>PDF - Ejercicio 1</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        h2 { margin-top: 30px; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        th, td {
+            border: 1px solid #333;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #eee;
+        }
+    </style>
+</head>
+<body>
+    <h1>Análisis de Datos - Ejercicio 1</h1>
+
+    <h2>Top {{ X_clientes }} Clientes con Más Incidencias</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID Cliente</th>
+                <th>Nombre</th>
+                <th>Nº Incidencias</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cli in clientes %}
+            <tr>
+                <td>{{ cli.id_cli }}</td>
+                <td>{{ cli.nombre }}</td>
+                <td>{{ cli.num_incidencias }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Top {{ X_incidencias }} Tipos de Incidencias por Tiempo Total</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID Incidencia</th>
+                <th>Nombre</th>
+                <th>Tiempo Promedio</th>
+                <th>Tiempo Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for inc in incidencias %}
+            <tr>
+                <td>{{ inc.id_inci }}</td>
+                <td>{{ inc.nombre }}</td>
+                <td>{{ "%.2f"|format(inc.tiempo_promedio) }}</td>
+                <td>{{ "%.2f"|format(inc.tiempo_total) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

@@ -99,7 +99,6 @@ with open('datos.json') as j:
 
 conn.commit()
 
-# Cerrar la conexión
 conn.close()
 
 

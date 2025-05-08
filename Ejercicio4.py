@@ -20,11 +20,11 @@ def obtener_paises(region,cantidad):
         datos = sorted(datos, key=lambda x: x.get("population", 0), reverse=True)
 
         paises = []
-        for pais in datos[:cantidad]:  # Limitar a 10 países
+        for pais in datos[:cantidad]:
             paises.append({
                 "nombre": pais.get("translations", {}).get("spa", {}).get("common", pais.get("name", {}).get("common", "Desconocido")),
                 "capital": pais.get("capital", ["No especificada"])[0],
-                "region": regiones_traducidas.get(pais.get("region"), "Desconocida"),  # Usamos el diccionario para traducir la región
+                "region": regiones_traducidas.get(pais.get("region"), "Desconocida"),
                 "poblacion": pais.get("population", 0),
                 "bandera": pais.get("flags", {}).get("png", "")
             })
