@@ -2,140 +2,74 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ titulo }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            background-color: #f8f9fa;
-            font-family: 'Segoe UI', Roboto, sans-serif;
-        }
-        .data-card {
-            margin-bottom: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .card-header {
-            background-color: #f8f9fa;
-            border-bottom: 1px solid #eee;
-            padding: 1.25rem 1.5rem;
-        }
-        .table-responsive {
-            overflow-x: auto;
-        }
-        .table {
-            margin-bottom: 0;
-            width: 100%;
-        }
-        .table th {
-            background-color: #f8f9fa;
-            font-weight: 500;
-            padding: 12px 16px;
-            border-top: none;
-            white-space: nowrap;
-        }
-        .table td {
-            padding: 12px 16px;
-            vertical-align: middle;
-            border-top: 1px solid #eee;
-        }
-        .table tr:hover {
-            background-color: #f8f9fa;
-        }
-        .info-badge {
-            background-color: #e9ecef;
-            color: #495057;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-weight: 500;
-        }
-        .flag-img {
-            width: 50px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            border: 1px solid #dee2e6;
-        }
-    </style>
 </head>
 <body class="bg-light">
-    <div class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-10">
-                <div class="card data-card">
-                    <div class="card-header">
-                        <h2 class="h5 mb-0">
-                            <i class="fas fa-globe-americas me-2"></i>{{ titulo }}
-                        </h2>
-                    </div>
 
-                    <div class="card-body">
-                        <div class="d-flex gap-3 mb-4">
-                            <span class="info-badge">
-                                <i class="fas fa-map-marker-alt me-1"></i> Región: {{ region }}
-                            </span>
-                            <span class="info-badge">
-                                <i class="fas fa-list-ol me-1"></i> Cantidad: {{ cantidad }}
-                            </span>
-                        </div>
+<div class="container mt-5">
+    <h1 class="mb-4 text-center">{{ titulo }}</h1>
 
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th><i class="fas fa-landmark me-1"></i> Nombre</th>
-                                        <th><i class="fas fa-city me-1"></i> Capital</th>
-                                        <th><i class="fas fa-map-marked-alt me-1"></i> Región</th>
-                                        <th><i class="fas fa-users me-1"></i> Población</th>
-                                        <th><i class="fas fa-flag me-1"></i> Bandera</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for pais in paises %}
-                                    <tr>
-                                        <td>{{ pais['nombre'] }}</td>
-                                        <td>{{ pais['capital'] }}</td>
-                                        <td>{{ pais['region'] }}</td>
-                                        <td>{{ pais['poblacion'] }}</td>
-                                        <td><img src="{{ pais['bandera'] }}" alt="Bandera" class="flag-img"></td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="card-footer text-muted text-end">
-                        <small>
-                            <i class="fas fa-sync-alt me-1"></i>
-                            Actualizado: <span id="update-time">{{ now }}</span>
-                        </small>
-                    </div>
-                </div>
-
-
-                <div class="mt-4 text-center d-flex justify-content-center gap-3">
-                    <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">
-                        <i class="fas fa-arrow-left me-1"></i> Volver al Menú Principal
-                    </a>
-                    <a href="/ejercicio4/pdf" class="btn btn-outline-primary">
-                        <i class="fas fa-file-pdf me-1"></i> Descargar PDF
-                    </a>
-                </div>
+    <form method="GET" action="{{ url_for('ejercicio4') }}" class="card p-4 mb-4 shadow-sm">
+        <div class="row g-3 align-items-center">
+            <div class="col-md-5">
+                <label for="region" class="form-label">Filtrar por región (opcional):</label>
+                <select name="region" id="region" class="form-select">
+                    <option value="">Seleccionar región</option>
+                    <option value="Europe" {% if region == 'Europe' %}selected{% endif %}>Europa</option>
+                    <option value="Americas" {% if region == 'Americas' %}selected{% endif %}>América</option>
+                    <option value="Asia" {% if region == 'Asia' %}selected{% endif %}>Asia</option>
+                    <option value="Oceania" {% if region == 'Oceania' %}selected{% endif %}>Oceanía</option>
+                    <option value="Africa" {% if region == 'Africa' %}selected{% endif %}>África</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="cantidad" class="form-label">Cantidad de países:</label>
+                <input type="number" name="cantidad" id="cantidad" value="{{ cantidad }}" min="1" class="form-control">
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">Mostrar países</button>
             </div>
         </div>
+    </form>
+
+    <h2 class="mb-3">Resultados</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Capital</th>
+                    <th>Región</th>
+                    <th>Población</th>
+                    <th>Bandera</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pais in paises %}
+                <tr>
+                    <td>{{ pais['nombre'] }}</td>
+                    <td>{{ pais['capital'] }}</td>
+                    <td>{{ pais['region'] }}</td>
+                    <td>{{ pais['poblacion'] }}</td>
+                    <td><img src="{{ pais['bandera'] }}" alt="Bandera" width="50" class="img-fluid"></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        const options = {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        };
-        document.getElementById('update-time').textContent =
-            new Date().toLocaleDateString('es-ES', options);
-    </script>
+    <div class="text-center mt-4">
+        <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i> Volver al Menú Principal
+            </a>
+        <a href="/ejercicio4/pdf?region={{ region }}&cantidad={{ cantidad }}" class="btn btn-outline-secondary">
+            Descargar PDF
+        </a>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
